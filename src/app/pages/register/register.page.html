@@ -1,0 +1,67 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>register</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">register</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <form (ngSubmit)="onRegister()" class="ion-padding">
+    <ion-item>
+      <ion-label position="floating">Nombre completo</ion-label>
+      <ion-input [(ngModel)]="nombre" name="nombre" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Correo electrónico</ion-label>
+      <ion-input [(ngModel)]="email" name="email" type="email" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Usuario</ion-label>
+      <ion-input [(ngModel)]="usuario" name="usuario" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input [(ngModel)]="contrasena" name="contrasena" type="password" required minlength="4"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Confirmar contraseña</ion-label>
+      <ion-input [(ngModel)]="contrasena2" name="contrasena2" type="password" required></ion-input>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>Acepto las políticas de privacidad</ion-label>
+      <ion-button fill="clear" href="https://jose-hernandez-45.github.io/Music_Inventory_docs/" target="_blank" rel="noopener" color="primary">Ver políticas</ion-button>
+      <ion-checkbox slot="end" [(ngModel)]="acceptedPolicies" name="acceptedPolicies"></ion-checkbox>
+    </ion-item>
+    <ion-button expand="block" type="submit" color="primary" class="ion-margin-top">Regístrate</ion-button>
+
+    <div class="ion-text-center ion-margin-top">
+      <small>¿Ya tienes cuenta?</small>
+      <ion-button fill="clear" routerLink="/login" color="primary">Inicia sesión</ion-button>
+    </div>
+  </form>
+  <ion-modal #policiesModal>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Políticas de privacidad</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closePoliciesModal()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <p>Para poder ingresar al sistema debes aceptar las políticas de privacidad y términos de uso.</p>
+      <ion-button expand="block" color="primary" (click)="acceptPolicies()">Aceptar y continuar</ion-button>
+    </ion-content>
+  </ion-modal>
+</ion-content>

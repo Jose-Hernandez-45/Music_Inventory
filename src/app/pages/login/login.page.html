@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Iniciar Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="login()">
+    <ion-item>
+      <ion-label position="floating">Usuario</ion-label>
+      <ion-input [(ngModel)]="usuario" name="usuario" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input [(ngModel)]="contrasena" name="contrasena" type="password" required></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" color="primary" fil="outline">Ingresar</ion-button>
+  </form>
+    <ion-toolbar>
+      <ion-title size="small">
+        ¿No tienes una cuenta?
+        <ion-button fill="clear" routerLink="/register" color="primary">
+          Regístrate
+        </ion-button>
+      </ion-title>
+    </ion-toolbar>
+</ion-content>

@@ -1,0 +1,7 @@
+{
+  "name": "Music_Inventory",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
