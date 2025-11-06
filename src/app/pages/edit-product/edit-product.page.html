@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="!isLoading">
+    <ion-card-header>
+      <ion-card-title>Formulario de Edición</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <ion-item>
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input formControlName="nombre"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-textarea formControlName="descripcion"></ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Precio</ion-label>
+          <ion-input type="number" formControlName="precio"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Categoría</ion-label>
+          <ion-select formControlName="categoria">
+            <ion-select-option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Stock</ion-label>
+          <ion-input type="number" formControlName="stock"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Marca</ion-label>
+          <ion-input formControlName="marca"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">URL de Imagen</ion-label>
+          <ion-input formControlName="imageUrl"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Disponible</ion-label>
+          <ion-select formControlName="disponible">
+            <ion-select-option [value]="true">Sí</ion-select-option>
+            <ion-select-option [value]="false">No</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" [disabled]="productForm.invalid">Guardar Cambios</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

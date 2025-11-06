@@ -1,0 +1,136 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Agregar Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Agregar Producto</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="ion-padding">
+    <h1 class="ion-text-center ion-margin-bottom">Agregar un producto</h1>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Información del Producto</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+          
+          <!-- Nombre del producto -->
+          <ion-item>
+            <ion-label position="stacked">Nombre del Producto *</ion-label>
+            <ion-input 
+              formControlName="nombre" 
+              placeholder="Ej: Guitarra Acústica"
+              type="text">
+            </ion-input>
+          </ion-item>
+          <div class="error-message" *ngIf="productForm.get('nombre')?.invalid && productForm.get('nombre')?.touched">
+            <small>El nombre debe tener al menos 3 caracteres</small>
+          </div>
+
+          <!-- Descripción -->
+          <ion-item>
+            <ion-label position="stacked">Descripción *</ion-label>
+            <ion-textarea 
+              formControlName="descripcion" 
+              placeholder="Describe el producto..."
+              rows="4">
+            </ion-textarea>
+          </ion-item>
+          <div class="error-message" *ngIf="productForm.get('descripcion')?.invalid && productForm.get('descripcion')?.touched">
+            <small>La descripción debe tener al menos 10 caracteres</small>
+          </div>
+
+          <!-- Precio -->
+          <ion-item>
+            <ion-label position="stacked">Precio ($) *</ion-label>
+            <ion-input 
+              formControlName="precio" 
+              placeholder="0.00"
+              type="number"
+              step="0.01">
+            </ion-input>
+          </ion-item>
+          <div class="error-message" *ngIf="productForm.get('precio')?.invalid && productForm.get('precio')?.touched">
+            <small>El precio debe ser mayor a 0</small>
+          </div>
+
+          <!-- Categoría -->
+          <ion-item>
+            <ion-label position="stacked">Categoría *</ion-label>
+            <ion-select 
+              formControlName="categoria" 
+              placeholder="Selecciona una categoría">
+              <ion-select-option *ngFor="let cat of categorias" [value]="cat">
+                {{ cat }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Stock -->
+          <ion-item>
+            <ion-label position="stacked">Stock *</ion-label>
+            <ion-input 
+              formControlName="stock" 
+              placeholder="0"
+              type="number"
+              min="0">
+            </ion-input>
+          </ion-item>
+          <div class="error-message" *ngIf="productForm.get('stock')?.invalid && productForm.get('stock')?.touched">
+            <small>El stock debe ser 0 o mayor</small>
+          </div>
+
+          <!-- Marca -->
+          <ion-item>
+            <ion-label position="stacked">Marca</ion-label>
+            <ion-input 
+              formControlName="marca" 
+              placeholder="Ej: Yamaha, sjc, fender"
+              type="text">
+            </ion-input>
+          </ion-item>
+
+          <!-- URL de Imagen (opcional) -->
+          <ion-item>
+            <ion-label position="stacked">URL de Imagen (opcional)</ion-label>
+            <ion-input 
+              formControlName="imageUrl" 
+              placeholder="https://ejemplo.com/imagen.jpg"
+              type="url">
+            </ion-input>
+          </ion-item>
+
+          <!-- Botones -->
+          <div class="button-container ion-margin-top">
+            <ion-button 
+              expand="block" 
+              type="submit" 
+              [disabled]="productForm.invalid || isSubmitting"
+              color="success">
+              <ion-spinner *ngIf="isSubmitting" name="crescent"></ion-spinner>
+              <span *ngIf="!isSubmitting">Agregar Producto</span>
+            </ion-button>
+
+            <ion-button 
+              expand="block" 
+              fill="outline" 
+              color="danger"
+              (click)="cancelar()"
+              [disabled]="isSubmitting">
+              Cancelar y volver
+            </ion-button>
+          </div>
+
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
