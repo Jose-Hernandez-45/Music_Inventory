@@ -14,12 +14,13 @@ import {
   IonMenuButton,
   IonIcon,
   IonText,
+  IonCheckbox,
   AlertController,
   LoadingController
 } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { musicalNotes } from 'ionicons/icons';
+import { musicalNotes, logoFacebook } from 'ionicons/icons';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -30,7 +31,7 @@ import { AuthService } from '../../services/auth';
   imports: [
     IonContent, IonHeader, IonTitle, IonToolbar,
     IonItem, IonLabel, IonInput, IonButton, IonButtons, 
-    IonMenuButton, IonIcon, IonText, RouterLink,
+    IonMenuButton, IonIcon, IonText, IonCheckbox, RouterLink,
     CommonModule, FormsModule
   ]
 })
@@ -38,6 +39,7 @@ export class LoginPage implements OnInit {
 
   email = '';
   contrasena = '';
+  aceptaPoliticas = false; // 👈 nuevo campo
 
   private authService = inject(AuthService);
   private alertController = inject(AlertController);
@@ -45,7 +47,7 @@ export class LoginPage implements OnInit {
   private router = inject(Router);
 
   constructor() {
-    addIcons({ musicalNotes });
+    addIcons({ musicalNotes, logoFacebook });
   }
 
   ngOnInit() {
@@ -155,9 +157,15 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-  // Función principal de login
+  // 🔹 Login con email/contraseña
   async onLogin() {
     console.log('🔐 Intentando iniciar sesión...');
+
+    // Validación: aceptar políticas
+    if (!this.aceptaPoliticas) {
+      await this.showErrorAlert('Debes aceptar las políticas de privacidad para iniciar sesión.');
+      return;
+    }
 
     // Validación: Campos vacíos
     if (!this.email.trim() || !this.contrasena) {
@@ -183,13 +191,11 @@ export class LoginPage implements OnInit {
     try {
       console.log('📤 Autenticando usuario...');
       
-      // Autenticar con Firebase
       const user = await this.authService.login(this.email, this.contrasena);
       
       console.log('✅ Usuario autenticado:', user.uid);
       await loading.dismiss();
       
-      // Obtener datos adicionales del usuario
       try {
         const userData = await this.authService.getUserData(user.uid);
         console.log('📄 Datos del usuario:', userData);
@@ -197,16 +203,28 @@ export class LoginPage implements OnInit {
         console.warn('No se pudieron obtener datos adicionales del usuario');
       }
       
-      // Redirigir a la página principal
       this.router.navigate(['/home']);
       
     } catch (error: any) {
       console.error('❌ Error al iniciar sesión:', error);
       await loading.dismiss();
-      
-      // Mostrar error traducido
       const errorMsg = this.firebaseErrorMessage(error.code);
       await this.showErrorAlert(errorMsg);
+    }
+  }
+
+  // 🔹 Login con Facebook
+  async onLoginWithFacebook() {
+    const loading = await this.showLoading('Conectando con Facebook...');
+    try {
+      const user = await this.authService.loginWithFacebook();
+      await loading.dismiss();
+      console.log('✅ Usuario autenticado con Facebook:', user.uid);
+      this.router.navigate(['/home']);
+    } catch (error: any) {
+      await loading.dismiss();
+      console.error('❌ Error en login con Facebook:', error);
+      await this.showErrorAlert('No se pudo iniciar sesión con Facebook');
     }
   }
 }

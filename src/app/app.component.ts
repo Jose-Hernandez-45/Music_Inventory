@@ -14,11 +14,12 @@ import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 })
 export class AppComponent implements OnInit {
   public appPages = [
-    { title: 'Iniciar Sesión', url: './login', icon: 'person' },
+    { title: 'Iniciar Sesión', url: './login', icon: 'person-add' },
     { title: 'Inicio', url: './home', icon: 'home' },
     { title: 'Productos', url: '/folder/Productos', icon: 'pricetag' },
     { title: 'Favoritos', url: '/folder/Favoritos', icon: 'heart' },
     { title: 'Administrador de productos', url: './adm-p', icon: 'bag-add' },
+    { title: 'Administración', url: './administracion', icon: 'person' },
     { title: 'Cerrar sesión', url: '/folder/CerrarSesion', color: 'danger', icon: 'warning' },
   ];
 

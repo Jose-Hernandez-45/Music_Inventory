@@ -29,5 +29,9 @@ export const routes: Routes = [
   {
     path: 'edit-product/:id',
     loadComponent: () => import('./pages/edit-product/edit-product.page').then(m => m.EditProductPage)
+  },
+  {
+    path: 'administracion',
+    loadComponent: () => import('./pages/administracion/administracion.page').then( m => m.AdministracionPage)
   }
 ];

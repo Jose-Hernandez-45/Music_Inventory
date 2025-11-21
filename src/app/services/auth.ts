@@ -6,7 +6,9 @@ import {
   signOut, 
   User,
   deleteUser,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  FacebookAuthProvider,
+  signInWithPopup
 } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 
@@ -16,31 +18,28 @@ import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 export class AuthService {
   constructor(private auth: Auth, private firestore: Firestore) {}
 
-  // Función para registrar un usuario
+  // 🔹 Registrar usuario con email/contraseña
   async register(nombre: string, email: string, password: string, usuario?: string) {
     let createdUser: User | null = null;
     
     try {
       console.log('📤 Creando usuario en Firebase Auth...');
-      
-      // 🔹 Crear usuario en Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       createdUser = userCredential.user;
       
       console.log('✅ Usuario creado con UID:', createdUser.uid);
       console.log('🗂️ Guardando datos en Firestore...');
 
-      // 🔹 Preparar datos para Firestore
       const userData = {
         uid: createdUser.uid,
         nombre: nombre.trim(),
         usuario: usuario ? usuario.trim() : email.split('@')[0],
         correo: email.trim().toLowerCase(),
         createdAt: new Date().toISOString(),
-        activo: true
+        activo: true,
+        proveedor: 'email'
       };
 
-      // 🔹 Guardar datos en Firestore en la colección 'usuarios'
       const userRef = doc(this.firestore, `usuarios/${createdUser.uid}`);
       await setDoc(userRef, userData, { merge: false });
 
@@ -49,8 +48,6 @@ export class AuthService {
       
     } catch (error: any) {
       console.error('❌ Error en el registro:', error);
-      
-      // 🚨 Si falló Firestore pero se creó el usuario en Auth, eliminarlo
       if (createdUser && error.code?.includes('firestore')) {
         console.warn('⚠️ Eliminando usuario de Auth debido a error en Firestore...');
         try {
@@ -60,12 +57,11 @@ export class AuthService {
           console.error('❌ No se pudo eliminar usuario de Auth:', deleteError);
         }
       }
-      
       throw error;
     }
   }
 
-  // Función para iniciar sesión
+  // 🔹 Login con email/contraseña
   async login(email: string, password: string) {
     try {
       const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
@@ -76,7 +72,40 @@ export class AuthService {
     }
   }
 
-  // Función para cerrar sesión
+  // 🔹 Login con Facebook
+  async loginWithFacebook() {
+    try {
+      const provider = new FacebookAuthProvider();
+      const result = await signInWithPopup(this.auth, provider);
+      const user = result.user;
+
+      console.log('✅ Usuario autenticado con Facebook:', user);
+
+      // Guardar datos en Firestore si es nuevo
+      const userRef = doc(this.firestore, `usuarios/${user.uid}`);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          nombre: user.displayName || '',
+          correo: user.email || '',
+          imageUrl: user.photoURL || '',
+          createdAt: new Date().toISOString(),
+          activo: true,
+          proveedor: 'facebook'
+        });
+        console.log('🗂️ Datos guardados en Firestore');
+      }
+
+      return user;
+    } catch (error) {
+      console.error('❌ Error en login con Facebook:', error);
+      throw error;
+    }
+  }
+
+  // 🔹 Logout
   async logout() {
     try {
       await signOut(this.auth);
@@ -87,7 +116,7 @@ export class AuthService {
     }
   }
 
-  // Función para recuperar contraseña
+  // 🔹 Reset password
   async resetPassword(email: string) {
     try {
       await sendPasswordResetEmail(this.auth, email);
@@ -98,12 +127,12 @@ export class AuthService {
     }
   }
 
-  // Obtener usuario actual
+  // 🔹 Usuario actual
   getCurrentUser(): User | null {
     return this.auth.currentUser;
   }
 
-  // Obtener datos del usuario desde Firestore
+  // 🔹 Datos del usuario desde Firestore
   async getUserData(uid: string) {
     try {
       const userRef = doc(this.firestore, `usuarios/${uid}`);
