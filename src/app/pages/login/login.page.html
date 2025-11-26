@@ -1,0 +1,114 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Iniciar Sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Iniciar Sesión</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="login-container">
+    <div class="ion-text-center ion-margin-bottom">
+      <h2>Bienvenido a Music Inventory</h2>
+    </div>
+
+    <form (ngSubmit)="onLogin()">
+      <ion-item>
+        <ion-label position="floating">Correo electrónico</ion-label>
+        <ion-input 
+          [(ngModel)]="email" 
+          name="email" 
+          type="email" 
+          required
+          autocomplete="email"
+          inputmode="email">
+        </ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input 
+          [(ngModel)]="contrasena" 
+          name="contrasena" 
+          type="password" 
+          required
+          minlength="6"
+          autocomplete="current-password">
+        </ion-input>
+      </ion-item>
+
+      <!-- Checkbox de políticas -->
+      <ion-item lines="none">
+        <ion-checkbox [(ngModel)]="aceptaPoliticas" name="aceptaPoliticas"></ion-checkbox>
+        <ion-label class="ion-margin-start">
+          Acepto las políticas de privacidad
+        </ion-label>
+      </ion-item>
+
+      <!-- Botón para ver políticas -->
+      <div class="ion-text-end ion-margin-top">
+        <ion-button fill="clear"
+                    href="https://jose-hernandez-45.github.io/Music_Inventory_docs/"
+                    target="_blank"
+                    rel="noopener"
+                    color="primary"
+                    size="small">
+          Ver políticas
+        </ion-button>
+      </div>
+
+      <!-- Olvidé mi contraseña -->
+      <div class="ion-text-end ion-margin-top">
+        <ion-button 
+          fill="clear" 
+          size="small" 
+          color="medium"
+          (click)="forgotPassword()">
+          ¿Olvidaste tu contraseña?
+        </ion-button>
+      </div>
+
+      <ion-button 
+        expand="block" 
+        type="submit" 
+        color="primary" 
+        class="ion-margin-top">
+        Ingresar
+      </ion-button>
+    </form>
+
+    <!-- Separador -->
+    <div class="ion-text-center ion-margin-top ion-margin-bottom">
+      <ion-text color="medium">
+        <p>───────  o  ───────</p>
+      </ion-text>
+    </div>
+    
+    <!-- Botón de login con Facebook -->
+    <ion-button expand="block" color="primary" (click)="onLoginWithFacebook()">
+      <ion-icon name="logo-facebook" slot="start"></ion-icon>
+      Iniciar sesión con Facebook
+    </ion-button>
+
+    <!-- Registro -->
+    <div class="ion-text-center">
+      <ion-text>
+        <p>¿No tienes una cuenta?</p>
+      </ion-text>
+      <ion-button 
+        fill="outline" 
+        expand="block" 
+        routerLink="/register" 
+        color="primary">
+        Crear cuenta nueva
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

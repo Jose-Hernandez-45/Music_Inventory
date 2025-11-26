@@ -1,0 +1,45 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Productos en linea</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Productos en linea</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <h1 class="ion-text-center ion-margin-bottom">Administrador de Productos</h1>
+
+  <ion-button fill="outline" routerLink="/add-product">Agregar Producto</ion-button>
+
+  <ion-item class="ion-margin-top">
+    <ion-label position="floating">Buscar producto</ion-label>
+    <ion-input [(ngModel)]="searchTerm" (ionInput)="filtrarProductos()" placeholder="Escribe el nombre"></ion-input>
+  </ion-item>
+  <h3 class="ion-text-center">Tabla de productos</h3>
+  <ion-list class="ion-margin-top">
+    <ion-item *ngFor="let producto of productosFiltrados">
+      <ion-label>
+        <h2>{{ producto.nombre }}</h2>
+        <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+        <p><strong>Categoría:</strong> {{ producto.categoria }}</p>
+        <p><strong>Stock:</strong> {{ producto.stock }}</p>
+        <p><strong>Marca:</strong> {{ producto.marca || 'Sin marca' }}</p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button color="primary" (click)="editarProducto(producto.id)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" (click)="borrarProducto(producto.id)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+</ion-content>
