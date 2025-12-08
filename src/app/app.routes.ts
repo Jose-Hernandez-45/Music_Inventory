@@ -33,5 +33,9 @@ export const routes: Routes = [
   {
     path: 'administracion',
     loadComponent: () => import('./pages/administracion/administracion.page').then( m => m.AdministracionPage)
+  },
+  {
+  path: 'folder/CerrarSesion',
+  loadComponent: () => import('./folder/cerrar-sesion/cerrar-sesion.page').then(m => m.CerrarSesionPage)
   }
 ];

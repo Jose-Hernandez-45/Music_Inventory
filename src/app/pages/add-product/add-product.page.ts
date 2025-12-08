@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -25,6 +25,9 @@ import {
 } from '@ionic/angular/standalone';
 import { Firestore, collection, addDoc, serverTimestamp } from '@angular/fire/firestore';
 import { Auth } from '@angular/fire/auth';
+
+// 🔹 Importar Analytics
+import { Analytics, logEvent } from '@angular/fire/analytics';
 
 @Component({
   selector: 'app-add-product',
@@ -71,6 +74,9 @@ export class AddProductPage implements OnInit {
     'Otros'
   ];
 
+  // 🔹 Inyectar Analytics
+  private analytics = inject(Analytics);
+
   constructor(
     private fb: FormBuilder,
     private firestore: Firestore,
@@ -112,13 +118,11 @@ export class AddProductPage implements OnInit {
     this.isSubmitting = true;
 
     try {
-      // Obtener usuario actual
       const currentUser = this.auth.currentUser;
       if (!currentUser) {
         throw new Error('Usuario no autenticado');
       }
 
-      // Preparar datos del producto
       const productData = {
         ...this.productForm.value,
         precio: parseFloat(this.productForm.value.precio),
@@ -128,20 +132,22 @@ export class AddProductPage implements OnInit {
         updatedAt: serverTimestamp()
       };
 
-      // Guardar en Firestore
       const productsCollection = collection(this.firestore, 'productos');
       await addDoc(productsCollection, productData);
 
-      await loading.dismiss();
-      
-      await this.showAlert('Éxito', 'Producto agregado correctamente');
-      
-      // Resetear formulario
-      this.productForm.reset({
-        disponible: true
+      // 🔹 Registrar evento en Analytics
+      logEvent(this.analytics, 'add_product', {
+        nombre: productData.nombre,
+        precio: productData.precio,
+        categoria: productData.categoria,
+        stock: productData.stock,
+        marca: productData.marca || 'Sin marca'
       });
-      
-      // Navegar de vuelta
+
+      await loading.dismiss();
+      await this.showAlert('Éxito', 'Producto agregado correctamente');
+
+      this.productForm.reset({ disponible: true });
       this.router.navigate(['/adm-p']);
 
     } catch (error) {

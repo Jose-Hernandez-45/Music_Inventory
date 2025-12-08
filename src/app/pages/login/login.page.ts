@@ -58,7 +58,6 @@ export class LoginPage implements OnInit {
   async checkExistingSession() {
     const user = this.authService.getCurrentUser();
     if (user) {
-      console.log('Usuario ya autenticado, redirigiendo...');
       this.router.navigate(['/home']);
     }
   }
@@ -159,7 +158,6 @@ export class LoginPage implements OnInit {
 
   // 🔹 Login con email/contraseña
   async onLogin() {
-    console.log('🔐 Intentando iniciar sesión...');
 
     // Validación: aceptar políticas
     if (!this.aceptaPoliticas) {
@@ -189,16 +187,13 @@ export class LoginPage implements OnInit {
     const loading = await this.showLoading();
 
     try {
-      console.log('📤 Autenticando usuario...');
       
       const user = await this.authService.login(this.email, this.contrasena);
       
-      console.log('✅ Usuario autenticado:', user.uid);
       await loading.dismiss();
       
       try {
         const userData = await this.authService.getUserData(user.uid);
-        console.log('📄 Datos del usuario:', userData);
       } catch (error) {
         console.warn('No se pudieron obtener datos adicionales del usuario');
       }
@@ -219,7 +214,6 @@ export class LoginPage implements OnInit {
     try {
       const user = await this.authService.loginWithFacebook();
       await loading.dismiss();
-      console.log('✅ Usuario autenticado con Facebook:', user.uid);
       this.router.navigate(['/home']);
     } catch (error: any) {
       await loading.dismiss();
